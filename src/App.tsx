@@ -1,78 +1,121 @@
-import React from 'react'
-import { useState } from 'react'
-import {useEffect} from 'react'
-import './App.css'
+import React, { useState } from 'react';
+import './App.css';
+import { useEffect } from 'react';
 
-function TodoList () {
-  const [todos, setTodos] = useState<string[]>([])
-  const [inputValue, setInputValue] = useState('')
+interface Todo {
+  text: string;
+  completed: boolean;
+}
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    setInputValue(e.target.value)
-  }
+type Filter = 'all' | 'active' | 'completed';
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
-    e.preventDefault()
-    setTodos([...todos, inputValue])
-    setInputValue('')
-  }
+const TodoApp: React.FC = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [input, setInput] = useState('');
+  const [filter, setFilter] = useState<Filter>('all');
 
-  function handleDelete(index: number): void {
-    const newTodos = [...todos]
-    newTodos.splice(index, 1)
-    setTodos(newTodos)
-  }
+  const addTodo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim() === '') return;
+    setTodos([...todos, { text: input, completed: false }]);
+    setInput('');
+  };
 
+  const toggleTodo = (index: number) => {
+    const newTodos = [...todos];
+    newTodos[index].completed = !newTodos[index].completed;
+    setTodos(newTodos);
+  };
 
-    //////for color change
-    const [color, setColor] = useState("black")
-  const click = (color:string)=>{
-    setColor(color)
-  }
-  useEffect(() => {
-    document.body.style.backgroundColor = color 
-  }, [color])
+  const clearCompleted = () => {
+    setTodos(todos.filter(todo => !todo.completed));
+  };
 
+  const getFilteredTodos = () => {
+    if (filter === 'active') {
+      return todos.filter(todo => !todo.completed);
+    } else if (filter === 'completed') {
+      return todos.filter(todo => todo.completed);
+    }
+    return todos;
+
+   
+  };
+
+    
+   /////color changes
+   const [color, setColor] = useState("black")
+   const click = (color:string)=>{
+     setColor(color)
+   }
+   useEffect(() => {
+     document.body.style.backgroundColor = color 
+   }, [color])
 
   return (
-  
-
-
-
-    <div>
-        
-
-      <div className='top-bar'>
-      <div className='App' style={{ margin:"20px"}}>
-        <button onClick={
+    <div className="App">
+    <div className='header'>
+ <div className='colors'>
+    <button onClick={
           () => click("gray")
         }>Gray</button>
         <button onClick={
           () => click("black")
         }>Reset</button>
-      </div>
-        <img src='./bg-desktop-dark.jpg'/>
+        </div>
+    <h1 className="TodoTitle">Todo List</h1>
+
+    </div>
       
-      <h1>Todo List</h1>
-      </div>
-      <div className='holder'>
-      <form onSubmit={handleSubmit}>
-        <input type='text' placeholder='Enter your Todo here' value={inputValue} onChange={handleChange}/>
-        <button type="submit">Add Todo</button>
+      <form onSubmit={addTodo}>
+        <input
+          className="TodoInput"
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Add a new task"
+        />
+        <button type="submit" className="TodoButton">Add</button>
       </form>
-      <ul >
-        {todos.map((todo, index) => (
-          <li key={index}>{todo}
-            <button onClick={() => handleDelete(index)} style={{color:'red'}}>Delete</button>
-           
+      <ul className="TodoList">
+        {getFilteredTodos().map((todo, index) => (
+          <li key={index} className={`TodoItem ${todo.completed ? 'completed' : ''}`}>
+            <input
+              type="radio"
+              checked={todo.completed}
+              onChange={() => toggleTodo(index)}
+            />
+            <span>{todo.text}</span>
+            <button onClick={() => toggleTodo(index)}>
+              {todo.completed ? 'Undo' : 'Complete'}
+            </button>
           </li>
-          
         ))}
       </ul>
-      
+      <div className="FilterContainer">
+        <button
+          className={`FilterButton ${filter === 'all' ? 'active' : ''}`}
+          onClick={() => setFilter('all')}
+        >
+          All
+        </button>
+        <button
+          className={`FilterButton ${filter === 'active' ? 'active' : ''}`}
+          onClick={() => setFilter('active')}
+        >
+          Active
+        </button>
+        <button
+          className={`FilterButton ${filter === 'completed' ? 'active' : ''}`}
+          onClick={() => setFilter('completed')}
+        >
+          Completed
+        </button>
+        <button onClick={clearCompleted}>Clear Completed</button>
       </div>
+      
     </div>
-  )
-}
+  );
+};
 
-export default TodoList;
+export default TodoApp;

@@ -4,34 +4,76 @@
   padding: 2rem;
   text-align: center;
 }
-.top-bar{
-  margin-top: -130px;
+body {
+  background-image: url(./images/bg-desktop-dark.jpg);
+  background-repeat: no-repeat;
+  background-color: #282c34;
+  color: white;
+  font-family: Arial, sans-serif;
 }
-.bottom-content{
+
+.App {
   display: flex;
-  flex-direction: row;
-
-  
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
 }
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.colors{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 150px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-
-
-.card {
-  padding: 2em;
+.TodoInput {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  width: 300px;
 }
 
-.read-the-docs {
-  color: #888;
+.TodoList {
+  list-style: none;
+  padding: 0;
+}
+
+.TodoItem {
+  display: flex;
+  align-items: center;
+  background: #444;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.TodoItem.completed span {
+  text-decoration: line-through;
+}
+
+.TodoItem span {
+  flex: 1;
+}
+
+.FilterContainer {
+  display: flex;
+  justify-content: space-around;
+  width: 300px;
+  margin-top: 20px;
+}
+
+.FilterButton {
+  background: none;
+  border: none;
+  color: #61dafb;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.FilterButton.active {
+  background: #61dafb;
+  color: #282c34;
 }
